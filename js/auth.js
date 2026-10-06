@@ -123,3 +123,87 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+/* =========================
+   LOGIN
+========================= */
+
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+
+    loginForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById("loginEmail").value
+            .trim()
+            .toLowerCase();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+        const message =
+            document.getElementById("loginMessage");
+
+
+        /* Get users */
+
+        const users =
+            JSON.parse(localStorage.getItem("myLockerUsers")) || [];
+
+
+        /* Find user */
+
+        const user = users.find(
+            user =>
+                user.email === email &&
+                user.password === password
+        );
+
+
+        /* Invalid login */
+
+        if (!user) {
+
+            message.innerHTML = `
+                <div class="status status-error">
+                    Invalid email or password.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        /* Save logged-in user */
+
+        localStorage.setItem(
+            "myLockerCurrentUser",
+            JSON.stringify({
+                id: user.id,
+                name: user.name,
+                email: user.email
+            })
+        );
+
+
+        /* Success */
+
+        message.innerHTML = `
+            <div class="status status-success">
+                Login successful! Redirecting...
+            </div>
+        `;
+
+
+        setTimeout(() => {
+
+            window.location.href = "dashboard.html";
+
+        }, 800);
+
+    });
+
+}
